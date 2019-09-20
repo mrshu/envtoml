@@ -1,0 +1,17 @@
+[[fruit]]
+name = "apple"
+price = 2
+
+[[fruit]]
+name = "orange"
+price = 3.14
+
+[[other]]
+name = '$MY_LAPTOP_NAME'
+price = '$MY_LAPTOP_PRICE'
+sold = '$MY_IS_LAPTOP_SOLD'
+
+[[other]]
+name = "phone"
+price = 500
+

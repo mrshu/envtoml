@@ -1,0 +1,17 @@
+[[fruit]]
+name = "apple"
+price = 2
+
+[[fruit]]
+name = "orange"
+price = 3.14
+
+[[other]]
+name = "laptop"
+price = 1000
+sold = true
+
+[[other]]
+name = "phone"
+price = 500
+
