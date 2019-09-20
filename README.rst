@@ -1,11 +1,12 @@
 envtoml
 =======
 
-``envtoml`` is an answer to a fairly simple problem: including environment
-variables in TOML configuration files. In this way, it is very similar to
-both `envyaml <https://github.com/thesimj/envyaml>`_ and `varyaml
-<https://github.com/abe-winter/varyaml>`_ which provide very similar
-functionality for YAML and which greatly inspired this small package.
+``envtoml`` is an answer to a fairly simple problem: including values from
+environment variables in TOML configuration files. In this way, it is very
+similar to both `envyaml <https://github.com/thesimj/envyaml>`_ and
+`varyaml <https://github.com/abe-winter/varyaml>`_ which provide very
+similar functionality for YAML and which greatly inspired this small
+package.
 
 Example
 -------

@@ -1,8 +1,17 @@
 [tool.poetry]
 name = "envtoml"
-version = "0.1.0"
-description = ""
+version = "0.1.1"
+description = "A simple way of using environment variables in TOML configs (via interpolation)"
 authors = ["mr.Shu <mr@shu.io>"]
+license = "MIT"
+readme = "README.rst"
+repository = "https://github.com/mrshu/envtoml"
+keywords = ['TOML', 'environment', 'variables', 'config']
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Topic :: Software Development :: Libraries :: Python Modules"
+]
 
 [tool.poetry.dependencies]
 python = "^3.7"
