@@ -5,6 +5,14 @@ envTOML
     :target: https://pypi.python.org/pypi/envtoml
     :alt: PyPI Status
 
+.. image:: https://img.shields.io/travis/mrshu/envtoml.svg
+    :target: https://travis-ci.org/mrshu/envtoml
+    :alt: Build Status
+
+.. image:: https://coveralls.io/repos/github/mrshu/envtoml/badge.svg?branch=master
+    :target: https://coveralls.io/github/mrshu/envtoml?branch=master
+    :alt: Code coverage Status
+
 .. image:: https://img.shields.io/pypi/l/envtoml.svg
    :target: ./LICENSE
    :alt: License Status
