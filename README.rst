@@ -1,9 +1,9 @@
 envTOML
 =======
 
-.. image:: https://img.shields.io/pypi/v/pysemeels.svg
-    :target: https://pypi.python.org/pypi/pysemeels
-    :alt: Pypi Status
+.. image:: https://img.shields.io/pypi/v/envtoml.svg
+    :target: https://pypi.python.org/pypi/envtoml
+    :alt: PyPI Status
 
 .. image:: https://img.shields.io/pypi/l/envtoml.svg
    :target: ./LICENSE

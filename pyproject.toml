@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "envtoml"
+name = "envTOML"
 version = "0.1.1"
 description = "A simple way of using environment variables in TOML configs (via interpolation)"
 authors = ["mr.Shu <mr@shu.io>"]
