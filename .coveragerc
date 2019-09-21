@@ -1,0 +1,6 @@
+[run]
+source = envyaml/
+omit = tests/*
+
+[report]
+omit = tests/*

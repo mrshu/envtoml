@@ -1,7 +1,15 @@
-envtoml
+envTOML
 =======
 
-``envtoml`` is an answer to a fairly simple problem: including values from
+.. image:: https://img.shields.io/pypi/v/pysemeels.svg
+    :target: https://pypi.python.org/pypi/pysemeels
+    :alt: Pypi Status
+
+.. image:: https://img.shields.io/pypi/l/envtoml.svg
+   :target: ./LICENSE
+   :alt: License Status
+
+``envTOML`` is an answer to a fairly simple problem: including values from
 environment variables in TOML configuration files. In this way, it is very
 similar to both `envyaml <https://github.com/thesimj/envyaml>`_ and
 `varyaml <https://github.com/abe-winter/varyaml>`_ which provide very
@@ -29,16 +37,16 @@ with the environment variables being set to the following
   DB_HOST=some-host.tld
   DB_PORT=3306
   DB_USERNAME=user01
-  DB_PASSWORD=veryToughPa$$w0rd
+  DB_PASSWORD=veryToughPas$w0rd
 
-this config can then be parsed with ``envtoml`` in the following way:
+this config can then be parsed with ``envTOML`` in the following way:
 
 
 .. code:: python
 
-  from envtoml import load
+  import envtoml
 
-  cfg = load(open('./config.toml'))
+  cfg = envtoml.load(open('./config.toml'))
 
   print(cfg)
   # {'db': {'host': 'some-host.tld',
