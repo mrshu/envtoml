@@ -13,6 +13,6 @@ before_install:
 install:
   - poetry install
 script:
-  - poetry run nosetests --with-coverage --cover-package=envtoml
+  - poetry run pytest --cov=envtoml
 after_success:
   - coveralls
