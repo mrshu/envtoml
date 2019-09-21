@@ -20,8 +20,6 @@ def process(item):
         iter_ = item.items()
     elif isinstance(item, list):
         iter_ = enumerate(item)
-    else:
-        return
 
     for i, val in iter_:
         if isinstance(val, (dict, list)):
