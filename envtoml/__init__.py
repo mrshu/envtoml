@@ -40,7 +40,7 @@ def process(item):
                 except ValueError:
                     pass
 
-                item[i], _ = decoder.load_value(f'"{r}"')
+                item[i], _ = decoder.load_value('"{}"'.format(r))
 
 
 def load(*args, **kwargs):
