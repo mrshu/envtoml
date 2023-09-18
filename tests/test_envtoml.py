@@ -1,6 +1,7 @@
 from envtoml import __version__
 from envtoml import load, loads
 import os
+import pytest
 
 
 SIMPLE_OUTPUT = {'x': 5, 'y': 10}
@@ -67,6 +68,11 @@ def test_complex_replacement():
 
 def test_loads_with_replace_and_empty_value():
     assert loads("{x = 5, y = '$NON_EXISTENT_VAR'}") == {'x': 5, 'y': ''}
+
+
+def test_loads_with_replace_and_fail_on_missing_and_empty_value():
+    with pytest.raises(ValueError):
+        loads("{x = 5, y = '$NON_EXISTENT_VAR'}", fail_on_missing=True)
 
 
 def test_loads_with_replace_dict():
