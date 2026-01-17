@@ -1,1 +1,2 @@
-{x = 5, y = "$MY_CONFIG_VAR"}
+x = 5
+y = "$MY_CONFIG_VAR"

@@ -32,6 +32,9 @@ similar to both `envyaml <https://github.com/thesimj/envyaml>`_ and
 similar functionality for YAML and which greatly inspired this small
 package.
 
+Under the hood it uses the standard library ``tomllib`` (and ``tomli`` as a
+fallback for Python < 3.11).
+
 Example
 -------
 
@@ -62,7 +65,7 @@ this config can then be parsed with ``envTOML`` in the following way:
 
   import envtoml
 
-  cfg = envtoml.load(open('./config.toml'))
+  cfg = envtoml.load(open('./config.toml', 'rb'))
 
   print(cfg)
   # {'db': {'host': 'some-host.tld',

@@ -7,6 +7,19 @@ Semantic Versioning.
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-01-17
+### Added
+- PEP 561 typing marker and typing-focused tests.
+- GitHub Actions CI running pytest and ty.
+
+### Changed
+- Switched TOML parsing to stdlib tomllib (tomli fallback for Python < 3.11).
+- Updated load/loads signatures to match tomllib.
+- Adjusted tests and fixtures to valid TOML for tomllib.
+
+### Removed
+- Travis CI configuration.
+
 ## [0.1.3] - 2026-01-17
 ### Added
 - uv lockfile and uv-based dev workflow.
