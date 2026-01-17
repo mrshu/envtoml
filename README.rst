@@ -74,11 +74,14 @@ this config can then be parsed with ``envTOML`` in the following way:
   #   'password': 'veryToughPas$w0rd',
   #   'name': 'my_database'}}
 
-To fail when a referenced env var is missing, pass ``fail_on_missing=True``:
+To fail when a referenced env var is missing, pass ``fail_on_missing=True``.
+This raises ``ValueError`` when a variable is not present or is empty:
 
 .. code:: python
 
-  cfg = envtoml.load(open('./config.toml', 'rb'), fail_on_missing=True)
+  # Example: fail fast if API_TOKEN is not set.
+  cfg = envtoml.loads("api_token = '$API_TOKEN'\\n", fail_on_missing=True)
+  # Raises ValueError: API_TOKEN not found in environment
 
 Tests
 -----
