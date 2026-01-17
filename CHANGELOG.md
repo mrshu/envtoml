@@ -7,6 +7,11 @@ Semantic Versioning.
 
 ## [Unreleased]
 
+## [0.3.1] - 2026-01-17
+### Added
+- Support for multiple environment variables within a single string value.
+- Documentation examples for multi-variable expansion.
+
 ## [0.3.0] - 2026-01-17
 ### Added
 - `fail_on_missing` option for `load`/`loads` to raise on missing env vars.
