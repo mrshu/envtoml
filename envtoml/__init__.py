@@ -1,6 +1,7 @@
 import os
 import re
-from typing import Any, Dict, Match
+from datetime import date, datetime, time
+from typing import IO, Dict, List, Match, Optional, Sequence, Type, TypeVar, Union
 
 import toml
 
@@ -8,7 +9,12 @@ __version__ = '0.1.3'
 
 RE_ENV_VAR: str = r'\$([A-Z_][A-Z0-9_]+)'
 decoder = toml.TomlDecoder()
-_NO_REPLACEMENT = object()
+
+TOMLDict = Dict[str, 'TOMLValue']
+TOMLList = List['TOMLValue']
+TOMLPrimitive = Union[str, int, float, bool, datetime, date, time]
+TOMLValue = Union[TOMLPrimitive, TOMLDict, TOMLList]
+TOMLDictT = TypeVar('TOMLDictT', bound=Dict[str, TOMLValue])
 
 
 def env_replace(match: Match[str]) -> str:
@@ -16,9 +22,9 @@ def env_replace(match: Match[str]) -> str:
     return os.environ.get(env_var, '')
 
 
-def _replace_env_value(value: str) -> object:
+def _replace_env_value(value: str) -> Optional[TOMLPrimitive]:
     if not re.match(RE_ENV_VAR, value):
-        return _NO_REPLACEMENT
+        return None
 
     replaced = re.sub(RE_ENV_VAR, env_replace, value)
 
@@ -33,14 +39,14 @@ def _replace_env_value(value: str) -> object:
     return parsed
 
 
-def process(item: Any) -> None:
+def process(item: Union[TOMLDict, TOMLList]) -> None:
     if isinstance(item, dict):
         for key, val in item.items():
             if isinstance(val, (dict, list)):
                 process(val)
             elif isinstance(val, str):
                 replaced = _replace_env_value(val)
-                if replaced is not _NO_REPLACEMENT:
+                if replaced is not None:
                     item[key] = replaced
     elif isinstance(item, list):
         for index, val in enumerate(item):
@@ -48,17 +54,36 @@ def process(item: Any) -> None:
                 process(val)
             elif isinstance(val, str):
                 replaced = _replace_env_value(val)
-                if replaced is not _NO_REPLACEMENT:
+                if replaced is not None:
                     item[index] = replaced
 
 
-def load(*args: Any, **kwargs: Any) -> Dict[str, Any]:
-    data = toml.load(*args, **kwargs)
+def load(
+    f: Union[
+        str,
+        os.PathLike[str],
+        IO[str],
+        Sequence[Union[str, os.PathLike[str], IO[str]]],
+    ],
+    _dict: Optional[Type[TOMLDictT]] = None,
+    decoder: Optional[toml.TomlDecoder] = None,
+) -> TOMLDictT:
+    if _dict is None:
+        data = toml.load(f, decoder=decoder)
+    else:
+        data = toml.load(f, _dict=_dict, decoder=decoder)
     process(data)
     return data
 
 
-def loads(*args: Any, **kwargs: Any) -> Dict[str, Any]:
-    data = toml.loads(*args, **kwargs)
+def loads(s: str, _dict: Optional[Type[TOMLDictT]] = None) -> TOMLDictT:
+    if _dict is None:
+        data = toml.loads(s)
+    else:
+        data = toml.loads(s, _dict=_dict)
     process(data)
     return data
+
+
+load.__doc__ = toml.load.__doc__
+loads.__doc__ = toml.loads.__doc__

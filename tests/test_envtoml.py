@@ -1,5 +1,8 @@
 import os
 
+import pytest
+import toml
+
 from envtoml import __version__
 from envtoml import load, loads
 
@@ -75,3 +78,16 @@ def test_loads_with_replace_and_empty_value():
 def test_loads_with_replace_dict():
     os.environ['MY_CONFIG_VAR'] = "{z = 123}"
     assert loads("{x = 5, y = '$MY_CONFIG_VAR'}") == {'x': 5, 'y': {'z': 123}}
+
+
+def test_load_docstring_matches_toml():
+    assert load.__doc__ == toml.load.__doc__
+
+
+def test_loads_docstring_matches_toml():
+    assert loads.__doc__ == toml.loads.__doc__
+
+
+def test_loads_rejects_non_string():
+    with pytest.raises(TypeError):
+        loads(123)  # type: ignore[arg-type]
