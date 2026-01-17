@@ -74,6 +74,17 @@ this config can then be parsed with ``envTOML`` in the following way:
   #   'password': 'veryToughPas$w0rd',
   #   'name': 'my_database'}}
 
+You can reference multiple environment variables inside a single string:
+
+.. code:: python
+
+  cfg = envtoml.loads(
+      "db_url = 'mysql://$DB_USERNAME:$DB_PASSWORD@$DB_HOST:$DB_PORT/$DB_NAME'\\n"
+  )
+
+  print(cfg)
+  # {'db_url': 'mysql://user01:veryToughPas$w0rd@some-host.tld:3306/my_database'}
+
 To fail when a referenced env var is missing, pass ``fail_on_missing=True``.
 This raises ``ValueError`` when a variable is not present or is empty:
 
