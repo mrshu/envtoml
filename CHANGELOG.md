@@ -1,0 +1,42 @@
+# Changelog
+
+All notable changes to this project will be documented in this file.
+
+The format is based on Keep a Changelog, and this project adheres to
+Semantic Versioning.
+
+## [Unreleased]
+
+## [0.1.3] - 2026-01-17
+### Added
+- uv lockfile and uv-based dev workflow.
+
+### Changed
+- Migrated project metadata to PEP 621 and switched the build backend to Hatchling.
+- Updated test instructions to use uv.
+
+### Removed
+- Poetry lockfile.
+
+## [0.1.2] - 2019-09-27
+### Added
+- Pytest-based test runner and coverage tooling.
+- Travis CI and coverage configuration.
+
+### Changed
+- Python version constraints in project metadata.
+- Package metadata naming tweaks.
+
+### Fixed
+- Removed a stray return in the processing logic.
+
+### Docs
+- README badges and copy updates.
+
+## [0.1.1] - 2019-09-20
+### Fixed
+- README and metadata tweaks.
+
+## [0.1.0] - 2019-09-20
+### Added
+- Initial release.
