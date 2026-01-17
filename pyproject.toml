@@ -32,11 +32,25 @@ dev = [
     "pytest-cov>=4.1",
     "coverage>=7.4",
     "ruff",
+    "ty>=0.0.12",
 ]
 
 [build-system]
 requires = ["hatchling>=1.25"]
 build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["envtoml"]
+include = ["envtoml/py.typed"]
+
+[tool.ty]
+
+[tool.ty.src]
+include = ["envtoml", "tests"]
+
+[tool.ty.rules]
+invalid-ignore-comment = "error"
+unused-ignore-comment = "error"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
