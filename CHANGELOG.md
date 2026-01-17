@@ -7,6 +7,10 @@ Semantic Versioning.
 
 ## [Unreleased]
 
+## [0.2.1] - 2026-01-17
+### Changed
+- Re-release to update PyPI artifacts for the 0.2.x line.
+
 ## [0.2.0] - 2026-01-17
 ### Added
 - PEP 561 typing marker and typing-focused tests.
