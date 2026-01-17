@@ -23,8 +23,13 @@ TOMLValue = Union[TOMLPrimitive, TOMLDict, TOMLList]
 ParseFloat = Callable[[str], float]
 
 
-def env_replace(match: Match[str]) -> str:
+def env_replace(match: Match[str], fail_on_missing: bool) -> str:
     env_var = match.group(1)
+    if fail_on_missing:
+        value = os.environ.get(env_var)
+        if not value:
+            raise ValueError(f'{env_var} not found in environment')
+        return value
     return os.environ.get(env_var, '')
 
 
@@ -36,11 +41,16 @@ def _load_inline_value(value: str, parse_float: ParseFloat) -> TOMLValue:
 def _replace_env_value(
     value: str,
     parse_float: ParseFloat,
+    fail_on_missing: bool,
 ) -> Optional[TOMLValue]:
     if not re.match(RE_ENV_VAR, value):
         return None
 
-    replaced = re.sub(RE_ENV_VAR, env_replace, value)
+    replaced = re.sub(
+        RE_ENV_VAR,
+        lambda match: env_replace(match, fail_on_missing),
+        value,
+    )
 
     # Try to parse the value as TOML (float, bool, inline table, etc.).
     # If that fails, fall back to a basic string.
@@ -51,21 +61,25 @@ def _replace_env_value(
         return _load_inline_value(quoted, parse_float)
 
 
-def process(item: TOMLValue, parse_float: ParseFloat) -> None:
+def process(
+    item: TOMLValue,
+    parse_float: ParseFloat,
+    fail_on_missing: bool,
+) -> None:
     if isinstance(item, dict):
         for key, val in item.items():
             if isinstance(val, (dict, list)):
-                process(val, parse_float)
+                process(val, parse_float, fail_on_missing)
             elif isinstance(val, str):
-                replaced = _replace_env_value(val, parse_float)
+                replaced = _replace_env_value(val, parse_float, fail_on_missing)
                 if replaced is not None:
                     item[key] = replaced
     elif isinstance(item, list):
         for index, val in enumerate(item):
             if isinstance(val, (dict, list)):
-                process(val, parse_float)
+                process(val, parse_float, fail_on_missing)
             elif isinstance(val, str):
-                replaced = _replace_env_value(val, parse_float)
+                replaced = _replace_env_value(val, parse_float, fail_on_missing)
                 if replaced is not None:
                     item[index] = replaced
 
@@ -75,15 +89,17 @@ def load(
     /,
     *,
     parse_float: ParseFloat = float,
+    fail_on_missing: bool = False,
 ) -> dict[str, Any]:
     """Parse TOML from a binary file object and replace environment variables.
 
     Args:
         fp: Binary file object to read.
         parse_float: Callable to parse TOML float values.
+        fail_on_missing: Raise if an env var is missing or empty.
     """
     data = tomllib.load(fp, parse_float=parse_float)
-    process(data, parse_float)
+    process(data, parse_float, fail_on_missing)
     return data
 
 
@@ -92,13 +108,15 @@ def loads(
     /,
     *,
     parse_float: ParseFloat = float,
+    fail_on_missing: bool = False,
 ) -> dict[str, Any]:
     """Parse TOML from a string and replace environment variables.
 
     Args:
         s: TOML string to parse.
         parse_float: Callable to parse TOML float values.
+        fail_on_missing: Raise if an env var is missing or empty.
     """
     data = tomllib.loads(s, parse_float=parse_float)
-    process(data, parse_float)
+    process(data, parse_float, fail_on_missing)
     return data

@@ -83,17 +83,21 @@ def test_loads_with_replace_and_empty_value():
     assert loads("x = 5\ny = '$NON_EXISTENT_VAR'\n") == {'x': 5, 'y': ''}
 
 
+def test_loads_with_replace_and_fail_on_missing():
+    with pytest.raises(ValueError):
+        loads("x = 5\ny = '$NON_EXISTENT_VAR'\n", fail_on_missing=True)
+
+
 def test_loads_with_replace_dict():
     os.environ['MY_CONFIG_VAR'] = "{z = 123}"
     assert loads("x = 5\ny = '$MY_CONFIG_VAR'\n") == {'x': 5, 'y': {'z': 123}}
 
 
-def _signature_shape(func):
+def _signature_params(func):
     try:
-        params = inspect.signature(func).parameters.values()
+        return list(inspect.signature(func).parameters.values())
     except (TypeError, ValueError):
         return None
-    return [(p.name, p.kind, p.default) for p in params]
 
 
 def _annotations(func):
@@ -106,25 +110,47 @@ def _annotations(func):
 def test_load_signature_matches_tomllib():
     if tomllib.__name__ != 'tomllib':
         pytest.skip('stdlib tomllib not available on this Python version')
-    assert _signature_shape(load) == _signature_shape(tomllib.load)
+    toml_params = _signature_params(tomllib.load)
+    envtoml_params = _signature_params(load)
+    assert toml_params is not None
+    assert envtoml_params is not None
+    envtoml_map = {param.name: param for param in envtoml_params}
+    for param in toml_params:
+        assert param.name in envtoml_map
+        assert envtoml_map[param.name].kind == param.kind
+        assert envtoml_map[param.name].default == param.default
 
 
 def test_loads_signature_matches_tomllib():
     if tomllib.__name__ != 'tomllib':
         pytest.skip('stdlib tomllib not available on this Python version')
-    assert _signature_shape(loads) == _signature_shape(tomllib.loads)
+    toml_params = _signature_params(tomllib.loads)
+    envtoml_params = _signature_params(loads)
+    assert toml_params is not None
+    assert envtoml_params is not None
+    envtoml_map = {param.name: param for param in envtoml_params}
+    for param in toml_params:
+        assert param.name in envtoml_map
+        assert envtoml_map[param.name].kind == param.kind
+        assert envtoml_map[param.name].default == param.default
 
 
 def test_load_annotations_match_tomllib():
     if tomllib.__name__ != 'tomllib':
         pytest.skip('stdlib tomllib not available on this Python version')
-    assert _annotations(load) == _annotations(tomllib.load)
+    toml_annotations = _annotations(tomllib.load)
+    envtoml_annotations = _annotations(load)
+    for name, annotation in toml_annotations.items():
+        assert envtoml_annotations.get(name) == annotation
 
 
 def test_loads_annotations_match_tomllib():
     if tomllib.__name__ != 'tomllib':
         pytest.skip('stdlib tomllib not available on this Python version')
-    assert _annotations(loads) == _annotations(tomllib.loads)
+    toml_annotations = _annotations(tomllib.loads)
+    envtoml_annotations = _annotations(loads)
+    for name, annotation in toml_annotations.items():
+        assert envtoml_annotations.get(name) == annotation
 
 
 def test_load_docstring_mentions_parameters():
@@ -132,6 +158,7 @@ def test_load_docstring_mentions_parameters():
     assert doc is not None
     assert 'fp' in doc
     assert 'parse_float' in doc
+    assert 'fail_on_missing' in doc
 
 
 def test_loads_docstring_mentions_parameters():
@@ -139,6 +166,7 @@ def test_loads_docstring_mentions_parameters():
     assert doc is not None
     assert 's' in doc
     assert 'parse_float' in doc
+    assert 'fail_on_missing' in doc
 
 
 def test_loads_rejects_non_string():

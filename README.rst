@@ -74,6 +74,12 @@ this config can then be parsed with ``envTOML`` in the following way:
   #   'password': 'veryToughPas$w0rd',
   #   'name': 'my_database'}}
 
+To fail when a referenced env var is missing, pass ``fail_on_missing=True``:
+
+.. code:: python
+
+  cfg = envtoml.load(open('./config.toml', 'rb'), fail_on_missing=True)
+
 Tests
 -----
 
