@@ -7,6 +7,13 @@ Semantic Versioning.
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-01-17
+### Added
+- `fail_on_missing` option for `load`/`loads` to raise on missing env vars.
+
+### Changed
+- Docs/tests updated for the new option and relaxed tomllib parity checks.
+
 ## [0.2.1] - 2026-01-17
 ### Changed
 - Re-release to update PyPI artifacts for the 0.2.x line.
