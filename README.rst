@@ -5,9 +5,17 @@ envTOML
     :target: https://pypi.python.org/pypi/envtoml
     :alt: PyPI Status
 
-.. image:: https://img.shields.io/travis/mrshu/envtoml.svg
-    :target: https://travis-ci.org/mrshu/envtoml
-    :alt: Build Status
+.. image:: https://img.shields.io/pypi/pyversions/envtoml.svg
+    :target: https://pypi.python.org/pypi/envtoml
+    :alt: Python Versions
+
+.. image:: https://img.shields.io/pypi/wheel/envtoml.svg
+    :target: https://pypi.python.org/pypi/envtoml
+    :alt: Wheel Status
+
+.. image:: https://img.shields.io/pypi/dm/envtoml.svg
+    :target: https://pypi.python.org/pypi/envtoml
+    :alt: PyPI Downloads
 
 .. image:: https://coveralls.io/repos/github/mrshu/envtoml/badge.svg?branch=master
     :target: https://coveralls.io/github/mrshu/envtoml?branch=master
