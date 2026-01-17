@@ -1,8 +1,9 @@
-__version__ = '0.1.3'
-
-import toml
 import os
 import re
+
+import toml
+
+__version__ = '0.1.3'
 
 RE_ENV_VAR = r'\$([A-Z_][A-Z0-9_]+)'
 decoder = toml.TomlDecoder()

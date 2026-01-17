@@ -1,6 +1,7 @@
+import os
+
 from envtoml import __version__
 from envtoml import load, loads
-import os
 
 
 SIMPLE_OUTPUT = {'x': 5, 'y': 10}
@@ -62,7 +63,9 @@ def test_complex_replacement():
     os.environ['MY_LAPTOP_PRICE'] = '1000'
     os.environ['MY_IS_LAPTOP_SOLD'] = 'true'
 
-    assert load(open('./tests/test_complex_replacement.toml')) == MORE_COMPLEX_OUTPUT # noqa
+    assert (
+        load(open('./tests/test_complex_replacement.toml')) == MORE_COMPLEX_OUTPUT
+    )
 
 
 def test_loads_with_replace_and_empty_value():
