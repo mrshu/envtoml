@@ -43,7 +43,7 @@ def _replace_env_value(
     parse_float: ParseFloat,
     fail_on_missing: bool,
 ) -> Optional[TOMLValue]:
-    if not re.match(RE_ENV_VAR, value):
+    if not re.search(RE_ENV_VAR, value):
         return None
 
     replaced = re.sub(

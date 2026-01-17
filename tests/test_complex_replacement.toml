@@ -7,11 +7,10 @@ name = "orange"
 price = 3.14
 
 [[other]]
-name = '$MY_LAPTOP_NAME'
+name = '$MY_LAPTOP_NAME:$MY_LAPTOP_PRICE'
 price = '$MY_LAPTOP_PRICE'
 sold = '$MY_IS_LAPTOP_SOLD'
 
 [[other]]
 name = "phone"
 price = 500
-

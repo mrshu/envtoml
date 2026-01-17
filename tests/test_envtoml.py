@@ -9,9 +9,7 @@ if sys.version_info >= (3, 11):
 else:  # pragma: no cover - fallback for Python < 3.11
     import tomli as tomllib
 
-from envtoml import __version__
-from envtoml import load, loads
-
+from envtoml import __version__, load, loads
 
 SIMPLE_OUTPUT = {'x': 5, 'y': 10}
 MORE_COMPLEX_OUTPUT = {
@@ -20,7 +18,7 @@ MORE_COMPLEX_OUTPUT = {
         {'name': 'orange', 'price': 3.14}
     ],
     'other': [
-        {'name': 'laptop', 'price': 1000, 'sold': True},
+        {'name': 'laptop:1000', 'price': 1000, 'sold': True},
         {'name': 'phone', 'price': 500}
     ]
 }
@@ -91,6 +89,63 @@ def test_loads_with_replace_and_fail_on_missing():
 def test_loads_with_replace_dict():
     os.environ['MY_CONFIG_VAR'] = "{z = 123}"
     assert loads("x = 5\ny = '$MY_CONFIG_VAR'\n") == {'x': 5, 'y': {'z': 123}}
+
+
+def test_loads_with_multiple_replacements_in_string():
+    os.environ['MONGO_USER'] = 'user01'
+    os.environ['MONGO_PASS'] = 'pass01'
+    os.environ['MONGO_PORT'] = '27017'
+    expected = (
+        'mongodb://user01:pass01@mongo:27017'
+    )
+    assert (
+        loads(
+            "mongo_url = 'mongodb://$MONGO_USER:$MONGO_PASS@mongo:$MONGO_PORT'\n"
+        )
+        == {'mongo_url': expected}
+    )
+
+
+def test_loads_with_replace_and_literal_text():
+    os.environ['API_TOKEN'] = 'abc123'
+    assert loads("token = 'prefix-$API_TOKEN-suffix'\n") == {
+        'token': 'prefix-abc123-suffix'
+    }
+
+
+def test_loads_with_repeated_variable():
+    os.environ['REPEAT_VAR'] = 'repeat'
+    assert loads("value = '$REPEAT_VAR:$REPEAT_VAR'\n") == {
+        'value': 'repeat:repeat'
+    }
+
+
+def test_loads_with_adjacent_variables():
+    os.environ['ADJ_A'] = 'foo'
+    os.environ['ADJ_B'] = 'bar'
+    assert loads("value = '$ADJ_A$ADJ_B'\n") == {'value': 'foobar'}
+
+
+def test_loads_with_multiple_replacements_missing_fails():
+    os.environ['OK_VAR'] = 'ok'
+    if 'MISSING_VAR' in os.environ:
+        del os.environ['MISSING_VAR']
+    with pytest.raises(ValueError):
+        loads("value = '$OK_VAR:$MISSING_VAR'\n", fail_on_missing=True)
+
+
+def test_loads_with_empty_variable_fails():
+    os.environ['EMPTY_VAR'] = ''
+    with pytest.raises(ValueError):
+        loads("value = '$EMPTY_VAR'\n", fail_on_missing=True)
+
+
+def test_loads_parse_float_with_env_value():
+    os.environ['FLOAT_VAR'] = '3.14'
+    value = loads(
+        "value = '$FLOAT_VAR'\n", parse_float=lambda s: float(s) + 1.0
+    )['value']
+    assert value == pytest.approx(4.14)
 
 
 def _signature_params(func):
