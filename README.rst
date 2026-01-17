@@ -66,19 +66,19 @@ this config can then be parsed with ``envTOML`` in the following way:
 Tests
 -----
 
-As this project makes use of `Poetry <https://poetry.eustace.io/>`_, after
-installing it the tests can be ran by executing the following from the
-project's root directory:
+This project uses `uv <https://github.com/astral-sh/uv>`_. After installing it,
+run the following from the project's root directory:
 
 .. code:: bash
 
-    poetry run nosetests tests
+    uv sync --group dev
+    uv run pytest
 
-They can also be ran with `coverage <https://nose.readthedocs.io/en/latest/plugins/cover.html>`_:
+For coverage:
 
 .. code:: bash
 
-    poetry run nosetests --with-coverage tests
+    uv run pytest --cov=envtoml
 
 
 License
