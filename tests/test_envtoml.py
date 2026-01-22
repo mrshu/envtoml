@@ -170,6 +170,25 @@ def test_loads_with_default_and_fail_on_missing():
     ) == {'value': 'fallback'}
 
 
+def test_loads_with_escaped_dollar():
+    assert loads("value = '$$NOT_A_VAR'\n") == {'value': '$NOT_A_VAR'}
+
+
+def test_loads_with_escaped_dollar_and_env_var():
+    os.environ['ESCAPED_VAR'] = 'value'
+    assert loads("value = '$$ESCAPED-$ESCAPED_VAR'\n") == {
+        'value': '$ESCAPED-value'
+    }
+
+
+def test_loads_with_escaped_missing_and_fail_on_missing():
+    if 'ESCAPED_MISSING' in os.environ:
+        del os.environ['ESCAPED_MISSING']
+    assert loads("value = '$$ESCAPED_MISSING'\n", fail_on_missing=True) == {
+        'value': '$ESCAPED_MISSING'
+    }
+
+
 def test_loads_parse_float_with_env_value():
     os.environ['FLOAT_VAR'] = '3.14'
     value = loads(

@@ -15,7 +15,8 @@ else:  # pragma: no cover - fallback for Python < 3.11
 __version__ = '0.3.1'
 
 RE_ENV_VAR: str = (
-    r'\$\{(?P<braced>[A-Z_][A-Z0-9_]*)(?::-(?P<default>[^}]*))?\}'
+    r'\$\$'
+    r'|\$\{(?P<braced>[A-Z_][A-Z0-9_]*)(?::-(?P<default>[^}]*))?\}'
     r'|\$(?P<simple>[A-Z_][A-Z0-9_]*)'
 )
 
@@ -27,6 +28,8 @@ ParseFloat = Callable[[str], float]
 
 
 def env_replace(match: Match[str], fail_on_missing: bool) -> str:
+    if match.group(0) == '$$':
+        return '$'
     env_var = match.group('simple') or match.group('braced')
     default = match.group('default')
     value = os.environ.get(env_var)

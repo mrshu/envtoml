@@ -9,6 +9,7 @@ Semantic Versioning.
 
 ### Added
 - Support for `${VAR:-default}` fallback syntax in env interpolation.
+- Support for escaping literal dollar signs via `$$`.
 
 ## [0.3.1] - 2026-01-17
 ### Added
