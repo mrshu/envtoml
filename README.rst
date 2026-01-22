@@ -35,6 +35,8 @@ package.
 Under the hood it uses the standard library ``tomllib`` (and ``tomli`` as a
 fallback for Python < 3.11).
 
+Supports Python 3.10+.
+
 Example
 -------
 
@@ -84,6 +86,26 @@ You can reference multiple environment variables inside a single string:
 
   print(cfg)
   # {'db_url': 'mysql://user01:veryToughPas$w0rd@some-host.tld:3306/my_database'}
+
+Default values can be specified with ``${VAR:-default}``:
+
+.. code:: python
+
+  cfg = envtoml.loads("region = '${AWS_REGION:-us-east-1}'\\n")
+  # {'region': 'us-east-1'}
+
+Literal dollar signs can be escaped with ``$$``:
+
+.. code:: python
+
+  cfg = envtoml.loads("price = '$$19.99'\\n")
+  # {'price': '$19.99'}
+
+Lists are supported too:
+
+.. code:: python
+
+  cfg = envtoml.loads("scopes = ['$SCOPE_A', '$SCOPE_B']\\n")
 
 To fail when a referenced env var is missing, pass ``fail_on_missing=True``.
 This raises ``ValueError`` when a variable is not present or is empty:

@@ -12,7 +12,7 @@ if sys.version_info >= (3, 11):
 else:  # pragma: no cover - fallback for Python < 3.11
     import tomli as tomllib
 
-__version__ = '0.3.1'
+__version__ = '0.4.0'
 
 RE_ENV_VAR: str = (
     r'\$\$'

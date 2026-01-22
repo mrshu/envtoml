@@ -7,9 +7,16 @@ Semantic Versioning.
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-01-22
 ### Added
 - Support for `${VAR:-default}` fallback syntax in env interpolation.
 - Support for escaping literal dollar signs via `$$`.
+- Support for multiple env vars inside a single string value.
+- Support for env var replacement within list values.
+- `fail_on_missing` option for strict missing-env handling.
+
+### Changed
+- Official support and CI testing now target Python 3.10+.
 
 ## [0.3.1] - 2026-01-17
 ### Added

@@ -25,7 +25,7 @@ MORE_COMPLEX_OUTPUT = {
 
 
 def test_version():
-    assert __version__ == '0.3.1'
+    assert __version__ == '0.4.0'
 
 
 def test_load():
@@ -187,6 +187,13 @@ def test_loads_with_escaped_missing_and_fail_on_missing():
     assert loads("value = '$$ESCAPED_MISSING'\n", fail_on_missing=True) == {
         'value': '$ESCAPED_MISSING'
     }
+
+
+def test_loads_with_list_replacements():
+    os.environ['LIST_VAR'] = 'list-value'
+    assert loads(
+        "values = ['$LIST_VAR', 'prefix-$LIST_VAR']\n"
+    ) == {'values': ['list-value', 'prefix-list-value']}
 
 
 def test_loads_parse_float_with_env_value():
