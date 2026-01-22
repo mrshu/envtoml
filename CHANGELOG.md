@@ -7,6 +7,9 @@ Semantic Versioning.
 
 ## [Unreleased]
 
+### Added
+- Support for `${VAR:-default}` fallback syntax in env interpolation.
+
 ## [0.3.1] - 2026-01-17
 ### Added
 - Support for multiple environment variables within a single string value.

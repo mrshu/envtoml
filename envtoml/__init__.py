@@ -14,7 +14,10 @@ else:  # pragma: no cover - fallback for Python < 3.11
 
 __version__ = '0.3.1'
 
-RE_ENV_VAR: str = r'\$([A-Z_][A-Z0-9_]+)'
+RE_ENV_VAR: str = (
+    r'\$\{(?P<braced>[A-Z_][A-Z0-9_]*)(?::-(?P<default>[^}]*))?\}'
+    r'|\$(?P<simple>[A-Z_][A-Z0-9_]*)'
+)
 
 TOMLDict = Dict[str, 'TOMLValue']
 TOMLList = List['TOMLValue']
@@ -24,13 +27,16 @@ ParseFloat = Callable[[str], float]
 
 
 def env_replace(match: Match[str], fail_on_missing: bool) -> str:
-    env_var = match.group(1)
-    if fail_on_missing:
-        value = os.environ.get(env_var)
-        if not value:
-            raise ValueError(f'{env_var} not found in environment')
+    env_var = match.group('simple') or match.group('braced')
+    default = match.group('default')
+    value = os.environ.get(env_var)
+    if value:
         return value
-    return os.environ.get(env_var, '')
+    if default is not None:
+        return default
+    if fail_on_missing:
+        raise ValueError(f'{env_var} not found in environment')
+    return ''
 
 
 def _load_inline_value(value: str, parse_float: ParseFloat) -> TOMLValue:

@@ -140,6 +140,36 @@ def test_loads_with_empty_variable_fails():
         loads("value = '$EMPTY_VAR'\n", fail_on_missing=True)
 
 
+def test_loads_with_default_for_missing_variable():
+    if 'DEFAULTED_VAR' in os.environ:
+        del os.environ['DEFAULTED_VAR']
+    assert loads("value = '${DEFAULTED_VAR:-fallback}'\n") == {
+        'value': 'fallback'
+    }
+
+
+def test_loads_with_default_ignored_when_set():
+    os.environ['DEFAULTED_VAR'] = 'present'
+    assert loads("value = '${DEFAULTED_VAR:-fallback}'\n") == {
+        'value': 'present'
+    }
+
+
+def test_loads_with_default_used_for_empty_value():
+    os.environ['DEFAULTED_EMPTY'] = ''
+    assert loads("value = '${DEFAULTED_EMPTY:-fallback}'\n") == {
+        'value': 'fallback'
+    }
+
+
+def test_loads_with_default_and_fail_on_missing():
+    if 'DEFAULTED_REQUIRED' in os.environ:
+        del os.environ['DEFAULTED_REQUIRED']
+    assert loads(
+        "value = '${DEFAULTED_REQUIRED:-fallback}'\n", fail_on_missing=True
+    ) == {'value': 'fallback'}
+
+
 def test_loads_parse_float_with_env_value():
     os.environ['FLOAT_VAR'] = '3.14'
     value = loads(
