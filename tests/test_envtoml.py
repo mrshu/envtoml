@@ -134,6 +134,53 @@ def test_loads_with_multiple_replacements_missing_fails():
         loads("value = '$OK_VAR:$MISSING_VAR'\n", fail_on_missing=True)
 
 
+def test_loads_with_env_values_ignores_environ():
+    os.environ['MAPPED_VAR'] = 'from-environ'
+    assert loads(
+        "value = '$MAPPED_VAR'\n", env_values={'MAPPED_VAR': 'from-mapping'}
+    ) == {'value': 'from-mapping'}
+
+
+def test_loads_with_env_values_missing_fails():
+    os.environ['ENVIRON_ONLY_VAR'] = 'present'
+    with pytest.raises(ValueError):
+        loads(
+            "value = '$ENVIRON_ONLY_VAR'\n",
+            fail_on_missing=True,
+            env_values={'OTHER_VAR': 'other'},
+        )
+
+
+def test_loads_with_env_values_default_fallback():
+    assert loads(
+        "value = '${MISSING_VAR:-fallback}'\n", env_values={}
+    ) == {'value': 'fallback'}
+    assert loads(
+        "value = '${EMPTY_VAR:-fallback}'\n", env_values={'EMPTY_VAR': ''}
+    ) == {'value': 'fallback'}
+
+
+def test_loads_with_env_values_dollar_escape():
+    assert loads(
+        "price = '$$19.99'\n", env_values={}
+    ) == {'price': '$19.99'}
+
+
+def test_loads_with_env_values_none_uses_environ():
+    os.environ['MY_CONFIG_VAR'] = '10'
+    assert loads(
+        "y = '$MY_CONFIG_VAR'\n", env_values=None
+    ) == {'y': 10}
+
+
+def test_load_with_env_values():
+    os.environ['MY_CONFIG_VAR'] = '999'
+    with open('./tests/test_simple_replacement.toml', 'rb') as handle:
+        assert load(
+            handle, env_values={'MY_CONFIG_VAR': '10'}
+        ) == SIMPLE_OUTPUT
+
+
 def test_loads_with_empty_variable_fails():
     os.environ['EMPTY_VAR'] = ''
     with pytest.raises(ValueError):

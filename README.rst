@@ -116,6 +116,20 @@ This raises ``ValueError`` when a variable is not present or is empty:
   cfg = envtoml.loads("api_token = '$API_TOKEN'\\n", fail_on_missing=True)
   # Raises ValueError: API_TOKEN not found in environment
 
+To substitute from a mapping other than ``os.environ``, pass ``env_values``.
+The mapping is used exclusively — variables set only in the process
+environment are not consulted. This pairs well with `python-dotenv
+<https://github.com/theskumar/python-dotenv>`_'s ``dotenv_values()``, which
+reads a ``.env`` file without mutating the environment:
+
+.. code:: python
+
+  cfg = envtoml.loads("port = '$PORT'\\n", env_values={'PORT': '8080'})
+  # {'port': 8080}
+
+  from dotenv import dotenv_values
+  cfg = envtoml.loads("port = '$PORT'\\n", env_values=dotenv_values('.env'))
+
 Tests
 -----
 

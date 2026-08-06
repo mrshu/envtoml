@@ -4,8 +4,8 @@ import json
 import os
 import re
 import sys
+from collections.abc import Mapping
 from datetime import date, datetime, time
-from collections.abc import MutableMapping
 from typing import Any, BinaryIO, Callable, Dict, List, Match, Optional, Union
 
 if sys.version_info >= (3, 11):
@@ -26,7 +26,7 @@ TOMLList = List['TOMLValue']
 TOMLPrimitive = Union[str, int, float, bool, datetime, date, time]
 TOMLValue = Union[TOMLPrimitive, TOMLDict, TOMLList]
 ParseFloat = Callable[[str], float]
-EnvironMap = Optional[MutableMapping[str, str]]
+EnvironMap = Optional[Mapping[str, str]]
 
 
 def env_replace(
@@ -90,7 +90,9 @@ def process(
             if isinstance(val, (dict, list)):
                 process(val, parse_float, fail_on_missing, env_values)
             elif isinstance(val, str):
-                replaced = _replace_env_value(val, parse_float, fail_on_missing, env_values)
+                replaced = _replace_env_value(
+                    val, parse_float, fail_on_missing, env_values,
+                )
                 if replaced is not None:
                     item[key] = replaced
     elif isinstance(item, list):
@@ -98,7 +100,9 @@ def process(
             if isinstance(val, (dict, list)):
                 process(val, parse_float, fail_on_missing, env_values)
             elif isinstance(val, str):
-                replaced = _replace_env_value(val, parse_float, fail_on_missing, env_values)
+                replaced = _replace_env_value(
+                    val, parse_float, fail_on_missing, env_values,
+                )
                 if replaced is not None:
                     item[index] = replaced
 
@@ -117,7 +121,8 @@ def load(
         fp: Binary file object to read.
         parse_float: Callable to parse TOML float values.
         fail_on_missing: Raise if an env var is missing or empty.
-        env_values: A mapping of env variable to value to use instead of os.environ
+        env_values: A mapping of env variable to value to use instead of
+            ``os.environ``.
     """
     data = tomllib.load(fp, parse_float=parse_float)
     process(data, parse_float, fail_on_missing, env_values)
@@ -138,7 +143,8 @@ def loads(
         s: TOML string to parse.
         parse_float: Callable to parse TOML float values.
         fail_on_missing: Raise if an env var is missing or empty.
-        env_values: A mapping of env variable to value to use instead of os.environ
+        env_values: A mapping of env variable to value to use instead of
+            ``os.environ``.
     """
     data = tomllib.loads(s, parse_float=parse_float)
     process(data, parse_float, fail_on_missing, env_values)
