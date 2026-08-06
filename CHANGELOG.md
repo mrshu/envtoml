@@ -7,6 +7,12 @@ Semantic Versioning.
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-08-06
+### Added
+- `env_values` option for `load()`/`loads()`: substitute from a caller-supplied
+  mapping instead of `os.environ` (e.g. python-dotenv's `dotenv_values()`).
+  Contributed by @mastercoms (#7).
+
 ## [0.4.0] - 2026-01-22
 ### Added
 - Support for `${VAR:-default}` fallback syntax in env interpolation.
